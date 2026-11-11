@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b18">
+<title>NIGHTCORE AI FEE MANAGER</title>
+<style>
+:root{--bg:#070b18;--panel:#111a30;--card:#192744;--text:#f4f7ff;--muted:#9eacc5;--a:#42e7ff;--b:#9b7bff;--green:#2be0a0;--red:#ff5d79;--yellow:#ffc65e;--line:#2c3d60}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% -5%,#29356c88,transparent 38%),var(--bg);color:var(--text);font-family:system-ui,Arial,sans-serif;min-height:100vh}
+header{padding:25px 16px 20px;text-align:center;background:linear-gradient(130deg,#111c35,#1b2b4d);border-bottom:1px solid #42e7ff66;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;width:240px;height:240px;border:1px solid #42e7ff22;border-radius:50%;left:calc(50% - 120px);top:-185px;box-shadow:0 0 0 24px #42e7ff09,0 0 0 48px #42e7ff06;animation:orbit 12s linear infinite}
+@keyframes orbit{to{transform:rotate(360deg)}}
+header h1{margin:0;color:var(--a);font-size:27px;letter-spacing:4px;text-shadow:0 0 22px #42e7ff88;position:relative;z-index:1}
+header p{margin:6px 0 0;color:var(--muted);font-size:10px;letter-spacing:2px;position:relative;z-index:1}
+main{max-width:960px;margin:auto;padding:14px 13px 45px}
+.panel{background:linear-gradient(145deg,var(--panel),#111c32);border:1px solid var(--line);border-radius:19px;padding:16px;margin:13px 0;box-shadow:0 15px 35px #0004;animation:appear .5s ease both}
+@keyframes appear{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 7px #42e7ff44}50%{box-shadow:0 0 22px #42e7ff99}}
+@keyframes wave{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1.2)}}
+h2{font-size:15px;color:var(--a);margin:0 0 13px;letter-spacing:.7px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.stat{background:linear-gradient(140deg,var(--card),#1c3152);border:1px solid #ffffff12;border-radius:14px;padding:14px;min-width:0;transition:.2s}
+.stat:active{transform:scale(.97)}.stat small{color:var(--muted);font-size:11px}.stat b{display:block;font-size:22px;margin-top:7px;overflow-wrap:anywhere}
+.stat:nth-child(1){animation:pulse 4s infinite}.greenText{color:var(--green)}.yellowText{color:var(--yellow)}
+input,select{width:100%;padding:12px 13px;margin:5px 0 9px;border:1px solid var(--line);border-radius:11px;background:#080f20;color:var(--text);font:inherit;outline:none}
+input:focus,select:focus{border-color:var(--a);box-shadow:0 0 0 3px #42e7ff19}
+label{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+button{border:0;border-radius:11px;padding:11px 13px;background:linear-gradient(100deg,var(--a),#91f2ff);color:#07101c;font-weight:750;font-size:13px;cursor:pointer;transition:transform .16s,filter .16s}
+button:active{transform:scale(.96)}button:hover{filter:brightness(1.08)}
+.secondary{background:#2a3b5d;color:white}.green{background:linear-gradient(100deg,#16bd83,#61efba);color:#052116}.danger{background:#59273a;color:white}.warn{background:#674b20;color:white}.wide{width:100%;margin-top:5px}
+.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}
+.student{background:linear-gradient(145deg,var(--card),#111d34);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;animation:appear .35s ease both;position:relative;overflow:hidden}
+.student:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--a)}
+.sthead{display:flex;justify-content:space-between;gap:8px;align-items:start}.sthead h3{margin:0;font-size:17px;overflow-wrap:anywhere}
+.tag{font-size:10px;padding:5px 8px;border-radius:20px;color:var(--green);background:#2be0a018;border:1px solid #2be0a055;white-space:nowrap}.tag.due{color:var(--yellow);background:#ffc65e18;border-color:#ffc65e55}
+.details{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:13px 0}
+.detail{background:#080f20a8;border-radius:10px;padding:9px 7px;min-width:0}.detail small{display:block;color:var(--muted);font-size:10px}.detail b{display:block;margin-top:5px;font-size:13px;overflow-wrap:anywhere}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.actions button{padding:10px 5px;font-size:12px}
+.empty{text-align:center;padding:20px;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.note{font-size:11px;color:var(--muted);line-height:1.5}
+.history{display:flex;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:12px}
+.aiBox{border:1px solid #42e7ff55;background:linear-gradient(130deg,#12233d,#211b43);border-radius:16px;padding:14px}
+.aiTop{display:flex;align-items:center;gap:10px;margin-bottom:10px}.orb{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,white,var(--a) 22%,#6455e8 70%);box-shadow:0 0 22px #42e7ff77;animation:pulse 2s infinite}
+.aiTop strong{color:var(--a)}.aiTop small{display:block;color:var(--muted);font-size:11px}
+.aiReply{background:#080f20a8;border-radius:12px;padding:12px;margin-top:10px;min-height:48px;font-size:13px;line-height:1.55;white-space:pre-wrap}
+.voiceBars{display:none;gap:4px;align-items:center;height:22px}.voiceBars.on{display:flex}.voiceBars i{width:4px;height:8px;border-radius:4px;background:var(--a);animation:wave .6s infinite ease-in-out}.voiceBars i:nth-child(2){animation-delay:.1s}.voiceBars i:nth-child(3){animation-delay:.2s}.voiceBars i:nth-child(4){animation-delay:.3s}.voiceBars i:nth-child(5){animation-delay:.4s}
+#toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);opacity:0;transition:.25s;background:#172b43;border:1px solid var(--a);border-radius:30px;padding:11px 16px;z-index:10;font-size:13px;max-width:90%;text-align:center}#toast.show{opacity:1;transform:translate(-50%,0)}
+dialog{width:min(92%,440px);background:#111a30;color:white;border:1px solid var(--a);border-radius:18px;padding:18px}dialog::backdrop{background:#000a}dialog h3{color:var(--a);margin-top:0}.dlgrow{display:flex;gap:8px;margin-top:10px}.dlgrow button{flex:1}
+@media(min-width:650px){.stats{grid-template-columns:repeat(4,1fr)}.actions{grid-template-columns:repeat(4,1fr)}}
+
+/* EXTRA NIGHTCORE MOTION PACK */
+body{background-size:180% 180%;animation:bgDrift 16s ease infinite}
+@keyframes bgDrift{0%,100%{background-position:0% 0%}50%{background-position:100% 70%}}
+header h1{animation:neonPulse 2.8s ease-in-out infinite}
+@keyframes neonPulse{0%,100%{text-shadow:0 0 8px #42e7ff66,0 0 18px #42e7ff44}50%{text-shadow:0 0 14px #42e7ff,0 0 34px #42e7ffbb,0 0 52px #9b7bff77}}
+.panel{transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.panel:hover{transform:translateY(-3px);border-color:#42e7ff88;box-shadow:0 18px 42px #0006,0 0 18px #42e7ff12}
+.stat{animation:statFloat 5s ease-in-out infinite}
+.stat:nth-child(2){animation-delay:.35s}.stat:nth-child(3){animation-delay:.7s}.stat:nth-child(4){animation-delay:1.05s}
+@keyframes statFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+button{position:relative;overflow:hidden}
+button:after{content:"";position:absolute;top:-60%;left:-75%;width:45%;height:220%;transform:rotate(24deg);background:#ffffff55;transition:left .55s ease}
+button:hover:after{left:140%}
+.student{transform-origin:top center}
+.student:hover{transform:translateY(-3px) scale(1.005);border-color:#42e7ff88;box-shadow:0 12px 28px #0005}
+.orb{position:relative}
+.orb:after{content:"";position:absolute;inset:-7px;border:1px solid #42e7ff88;border-radius:50%;animation:orbRing 2s ease-out infinite}
+@keyframes orbRing{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.65);opacity:0}}
+.aiReply{animation:replyIn .35s ease}
+@keyframes replyIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.tag{animation:tagGlow 3s ease-in-out infinite}
+@keyframes tagGlow{50%{box-shadow:0 0 12px #2be0a033}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+/* NIGHTCORE 3D AI ORB */
+.aiTop{gap:13px}
+.orb3d-wrap{width:112px;height:112px;flex:0 0 112px;position:relative;border-radius:50%;background:radial-gradient(circle,#173c62 0%,#101a37 58%,#080f20 100%);box-shadow:0 0 22px #42e7ff55,inset 0 0 18px #42e7ff22;overflow:visible}
+#aiOrb3D{width:100%;height:100%;display:block}
+.orb3d-wrap:after{content:"";position:absolute;inset:-7px;border:1px solid #42e7ff77;border-radius:50%;animation:orbRing 2.4s ease-out infinite;pointer-events:none}
+.aiBox{position:relative;overflow:hidden}
+.aiBox:before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,#42e7ff12,transparent,#9b7bff18,transparent);animation:aiAura 12s linear infinite;pointer-events:none}
+.aiBox>*{position:relative;z-index:1}
+@keyframes aiAura{to{transform:rotate(360deg)}}
+.aiReply{border:1px solid #42e7ff25;box-shadow:inset 0 0 18px #42e7ff08}
+@media(max-width:380px){.orb3d-wrap{width:92px;height:92px;flex-basis:92px}}
+
+
+/* SELF-CONTAINED 3D-STYLE ORB ANIMATION */
+.orb3d-wrap{cursor:pointer;touch-action:manipulation;perspective:500px}
+.orb3d-wrap:active{transform:scale(.94)}
+#aiOrb3D{filter:drop-shadow(0 0 10px #42e7ff88)}
+.aiBox{isolation:isolate}
+.aiBox:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;background:repeating-linear-gradient(0deg,transparent 0 5px,#42e7ff22 6px,transparent 7px);animation:scanline 7s linear infinite}
+@keyframes scanline{from{background-position-y:0}to{background-position-y:100px}}
+.aiTop strong{letter-spacing:1px;text-shadow:0 0 12px #42e7ff88}
+.orb3d-wrap.boost{filter:brightness(1.5);transform:scale(1.12);transition:transform .2s}
+
+</style>
+</head>
+<body>
+<header><h1>NIGHTCORE AI</h1><p>SMART FEE MANAGER • VOICE • REMINDERS</p></header>
+<main>
+<section class="panel"><h2>◈ LIVE DASHBOARD</h2><div class="stats">
+<div class="stat"><small>Total Monthly Fees</small><b id="total">₹0</b></div>
+<div class="stat"><small>Received</small><b class="greenText" id="received">₹0</b></div>
+<div class="stat"><small>Pending</small><b class="yellowText" id="pending">₹0</b></div>
+<div class="stat"><small>Students</small><b id="count">0</b></div></div></section>
+
+<section class="panel"><h2>＋ ADD STUDENT</h2>
+<label>Student name</label><input id="newName" placeholder="Student name">
+<div class="row"><div><label>Monthly fees ₹</label><input id="newFee" type="number" min="0" placeholder="500"></div><div><label>Reminder date</label><input id="newDue" type="date"></div></div>
+<button class="wide" onclick="addStudent()">＋ SAVE STUDENT</button></section>
+
+<section class="panel"><h2>✦ NIGHTCORE DEMO AI</h2>
+<div class="aiBox"><div class="aiTop"><div class="orb3d-wrap" id="orbTap" role="button" tabindex="0" aria-label="Tap to boost 3D AI animation"><canvas id="aiOrb3D" aria-label="3D animated AI orb"></canvas></div><div><strong> NIGHTCORE 3D ASSISTANT</strong><small>Local demo assistant • No internet AI</small></div><div class="voiceBars" id="bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+<input id="question" placeholder="Ask: Vinay ki fees aayi? / Kiski fees pending hai?">
+<div class="row"><button class="green" onclick="askAI()">Ask AI</button><button class="secondary" onclick="startListening()">🎙 Start mic</button><button class="secondary" onclick="stopListening();stopSpeaking()">⏹ Stop</button></div>
+<div class="aiReply" id="answer">Fee Assistant ready. Student ka naam, pending fees, ya total collection pucho.</div>
+<p class="note">Mic ke liye is HTML ko Netlify/HTTPS par Chrome mein kholo aur Microphone permission Allow karo. Sirf downloaded file (file://) se voice recognition aksar block hota hai. Abhi local demo mode hai. Baad mein API connect karne ke liye secure backend endpoint joda ja sakta hai. API key ko HTML file mein directly mat rakhna.</p>
+</div></section>
+
+<section class="panel"><h2>⌕ STUDENT RECORDS</h2><input id="search" placeholder="Search student..." oninput="renderStudents()"><div id="students"></div><p class="note">Starting records: Vinay, Kanika, Yaman, Divyansh, Parteek, Roshni Group aur Parikshit. Jinki fee amount confirm nahi hai, unki fee ₹0 set hai—Edit se amount bhar sakte ho.</p></section>
+
+<section class="panel"><h2>⏰ FEE REMINDERS</h2>
+<div class="row"><button class="green" onclick="enableNotifications()">Enable alerts</button><button class="secondary" onclick="checkReminders(true)">Check now</button></div>
+<p class="note">Reminder date student add/edit karte waqt set karo. Page khula ho to due date par automatic check hoga. File band hone par browser background reminder guaranteed nahi kar sakta. Android Chrome notifications ke liye HTTPS hosting aur permission zaroori ho sakti hai.</p>
+<div id="reminders"></div></section>
+
+<section class="panel"><h2>◷ PAYMENT HISTORY</h2><div id="history"></div></section>
+<section class="panel"><h2>⚙️ THEMES & BACKUP</h2>
+<select id="theme" onchange="setTheme(this.value)"><option value="dark">Dark Neon</option><option value="purple">Purple Galaxy</option><option value="blue">Ocean Blue</option><option value="green">Matrix Green</option><option value="red">Red Cyber</option><option value="light">Clean Light</option></select>
+<div class="row"><button class="secondary" onclick="backup()">⬇ Backup</button><button class="secondary" onclick="document.getElementById('restore').click()">↥ Restore</button></div><input id="restore" type="file" accept=".json" hidden onchange="restoreBackup(event)">
+<button class="danger wide" onclick="resetMonth()">Reset monthly payments</button></section>
+</main>
+<div id="toast"></div>
+<dialog id="editDialog"><h3>Edit Student</h3><input id="editName" placeholder="Name"><input id="editFee" type="number" min="0" placeholder="Monthly fee"><label>Reminder date</label><input id="editDue" type="date"><div class="dlgrow"><button class="secondary" onclick="editDialog.close()">Cancel</button><button onclick="saveEdit()">Save</button></div></dialog>
+<dialog id="payDialog"><h3>Record payment</h3><p id="payInfo"></p><input id="payAmount" type="number" min="0.01" step="0.01" placeholder="Amount ₹"><div class="dlgrow"><button class="secondary" onclick="payDialog.close()">Cancel</button><button class="green" onclick="savePay()">Save payment</button></div></dialog>
+
+
+<script>
+/* NIGHTCORE canvas-based 3D-style assistant core: no external library required */
+(function(){
+ const canvas=document.getElementById('aiOrb3D'),wrap=canvas&&canvas.parentElement;
+ if(!canvas)return;
+ const ctx=canvas.getContext('2d'); if(!ctx)return;
+ let w=1,h=1,dpr=1,t=0,boost=0,particles=[];
+ function resize(){
+   const r=canvas.getBoundingClientRect(); dpr=Math.min(devicePixelRatio||1,2);
+   w=Math.max(1,r.width);h=Math.max(1,r.height);
+   canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+   particles=Array.from({length:34},(_,i)=>({a:Math.random()*Math.PI*2,r:18+Math.random()*25,z:Math.random()*Math.PI*2,s:.4+Math.random()*1.3}));
+ }
+ if(window.ResizeObserver)new ResizeObserver(resize).observe(wrap);else window.addEventListener('resize',resize);
+ resize();
+ const tapOrb=document.getElementById('orbTap');
+ if(tapOrb){
+   const boostOrb=()=>{boost=1;tapOrb.classList.add('boost');setTimeout(()=>{boost=0;tapOrb.classList.remove('boost')},1200)};
+   tapOrb.addEventListener('click',boostOrb);
+   tapOrb.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();boostOrb()}});
+ }
+ function draw(){
+   requestAnimationFrame(draw);t+=.016;
+   ctx.clearRect(0,0,w,h);
+   const cx=w/2,cy=h/2,R=Math.min(w,h)*.27,spin=t*(1+boost*2);
+   const pulse=1+Math.sin(t*2.3)*.045+boost*.15;
+   // soft aura
+   let aura=ctx.createRadialGradient(cx,cy,2,cx,cy,R*2.2);
+   aura.addColorStop(0,'rgba(44,220,255,.25)');aura.addColorStop(.55,'rgba(85,95,255,.10)');aura.addColorStop(1,'rgba(0,0,0,0)');
+   ctx.fillStyle=aura;ctx.fillRect(0,0,w,h);
+   // orbital ellipses
+   [0,Math.PI/2,Math.PI/3].forEach((ang,i)=>{
+     ctx.save();ctx.translate(cx,cy);ctx.rotate(ang+spin*(i%2?-.35:.25));
+     ctx.beginPath();ctx.ellipse(0,0,R*(1.55+i*.12),R*(.48+i*.04),0,0,Math.PI*2);
+     ctx.strokeStyle=i===1?'rgba(183,139,255,.85)':'rgba(57,231,255,.82)';
+     ctx.lineWidth=1.2;ctx.shadowBlur=10;ctx.shadowColor=ctx.strokeStyle;ctx.stroke();ctx.restore();
+   });
+   // spherical shaded core
+   const rr=R*pulse;
+   const g=ctx.createRadialGradient(cx-rr*.38,cy-rr*.42,rr*.05,cx,cy,rr);
+   g.addColorStop(0,'#eaffff');g.addColorStop(.16,'#6af2ff');g.addColorStop(.48,'#178fc4');g.addColorStop(.78,'#343b9a');g.addColorStop(1,'#080d2c');
+   ctx.beginPath();ctx.arc(cx,cy,rr,0,Math.PI*2);ctx.fillStyle=g;ctx.shadowBlur=24;ctx.shadowColor='#32dfff';ctx.fill();ctx.shadowBlur=0;
+   // curved longitude/latitude lines create a 3D wireframe look
+   ctx.save();ctx.translate(cx,cy);ctx.rotate(spin*.45);
+   for(let k=-2;k<=2;k++){
+     ctx.beginPath();ctx.ellipse(0,0,rr*.96,Math.max(2,rr*(.18+Math.abs(k)*.12)),k*.45,0,Math.PI*2);
+     ctx.strokeStyle='rgba(191,249,255,.30)';ctx.lineWidth=.65;ctx.stroke();
+   }
+   for(let k=0;k<5;k++){
+     ctx.beginPath();ctx.ellipse(0,0,rr*(.25+k*.14),rr,spin*.25+k*.6,0,Math.PI*2);
+     ctx.strokeStyle='rgba(196,224,255,.22)';ctx.lineWidth=.65;ctx.stroke();
+   }
+   ctx.restore();
+   // orbiting data particles
+   particles.forEach((p,i)=>{
+     let a=p.a+spin*p.s*.35, x=cx+Math.cos(a)*p.r, y=cy+Math.sin(a)*p.r*.65;
+     ctx.beginPath();ctx.arc(x,y,1+((i%3)*.45),0,Math.PI*2);
+     ctx.fillStyle=i%4===0?'#c5a5ff':'#8ff7ff';ctx.shadowBlur=8;ctx.shadowColor=ctx.fillStyle;ctx.fill();ctx.shadowBlur=0;
+   });
+   boost=Math.max(0,boost-.012);
+ }
+ requestAnimationFrame(draw);
+ function activate(){
+   boost=1;wrap.classList.add('boost');setTimeout(()=>wrap.classList.remove('boost'),280);
+ }
+ wrap.addEventListener('click',activate);
+ canvas.addEventListener('touchstart',activate,{passive:true});
+ window.nightcoreOrbActivate=activate;
+})();
+</script>
+
+<script>
+const KEY="nightcore_ai_fee_v3",seed=[["Vinay",500],["Kanika",500],["Yaman",250],["Divyansh",250],["Parteek",0],["Roshni Group",800],["Parikshit",0]];
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function fresh(){return{students:seed.map(([name,fee])=>({id:uid(),name,fee,paid:0,due:""})),history:[],reminded:[]}}
+function load(){try{let d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.students))return{students:d.students,history:d.history||[],reminded:d.reminded||[]}}catch(e){}return fresh()}
+let data=load(),editId=null,payId=null;
+const historyBox=document.getElementById("history");
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){toast("Storage issue: backup lo");return false}}
+function cash(n){return"₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2})}
+function left(s){return Math.max(0,Number(s.fee||0)-Number(s.paid||0))}
+function toast(t){let x=document.getElementById("toast");x.textContent=t;x.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove("show"),2400)}
+function node(tag,cls,txt){let x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=txt;return x}
+function render(){
+ let total=0,got=0,dueSum=0;data.students.forEach(s=>{total+=+s.fee||0;got+=+s.paid||0;dueSum+=left(s)});
+ totalEl.textContent=cash(total);received.textContent=cash(got);pending.textContent=cash(dueSum);count.textContent=data.students.length;
+ renderStudents();renderHistory();renderReminders();
+}
+function renderStudents(){
+ let box=students;box.replaceChildren();let q=search.value.trim().toLowerCase();
+ let arr=data.students.filter(s=>s.name.toLowerCase().includes(q));
+ if(!arr.length){box.append(node("div","empty","No student found"));return}
+ arr.forEach(s=>{
+  let c=node("article","student"),h=node("div","sthead"),title=node("h3","",s.name),tag=node("span","tag"+
